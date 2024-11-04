@@ -5,9 +5,21 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Button to add a new class -->
+    <Button
+        android:id="@+id/buttonAddClass"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View Classes" />
-    <!-- Add more UI elements to display class details -->
+        android:text="Add Class"
+        android:layout_marginBottom="16dp" />
+
+    <!-- ListView to display the classes -->
+    <ListView
+        android:id="@+id/listViewClasses"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp" />
+
 </LinearLayout>

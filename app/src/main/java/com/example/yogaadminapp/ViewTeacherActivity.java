@@ -15,7 +15,6 @@ import java.util.List;
 public class ViewTeacherActivity extends AppCompatActivity {
 
     public static final int ADD_TEACHER_REQUEST = 1;
-
     public static final int EDIT_TEACHER_REQUEST = 2;
 
 

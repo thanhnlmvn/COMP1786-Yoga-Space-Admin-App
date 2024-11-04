@@ -18,12 +18,26 @@
         android:layout_height="wrap_content"
         android:textSize="14sp" />
 
-    <Button
-        android:id="@+id/buttonDeleteTeacher"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Delete"
-        android:layout_marginTop="8dp" />
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/buttonDeleteTeacher"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Delete" />
+
+        <Button
+            android:id="@+id/buttonEditTeacher"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Edit" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/buttonEditTeacher"
