@@ -7,21 +7,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
-import java.util.List;
+import java.util.ArrayList;
 
-public class TeacherAdapter extends ArrayAdapter<Teacher> {
+
+
+public class TeacherAdapter extends ArrayAdapter<Teacher> implements Filterable {
 
     private Context context;
     private DatabaseHelper databaseHelper;
     private List<Teacher> teacherList;
+    private List<Teacher> teacherListFull; // Full list for filtering
 
     public TeacherAdapter(Context context, List<Teacher> teacherList) {
         super(context, R.layout.item_teacher, teacherList);
         this.context = context;
         this.teacherList = teacherList;
+        this.teacherListFull = new ArrayList<>(teacherList); // Copy of the original list
         this.databaseHelper = new DatabaseHelper(context);
     }
 
@@ -60,8 +66,45 @@ public class TeacherAdapter extends ArrayAdapter<Teacher> {
                     Toast.makeText(context, "Teacher deleted!", Toast.LENGTH_SHORT).show();
                     teacherList.remove(teacher);
                     notifyDataSetChanged();
+                    if (context instanceof ViewTeacherActivity) {
+                        ((ViewTeacherActivity) context).checkNoResults(); // Notify activity to check results
+                    }
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                List<Teacher> filteredList = new ArrayList<>();
+                if (constraint == null || constraint.length() == 0) {
+                    filteredList.addAll(teacherListFull); // No filter, return full list
+                } else {
+                    String filterPattern = constraint.toString().toLowerCase().trim();
+                    for (Teacher teacher : teacherListFull) {
+                        if (teacher.getName().toLowerCase().contains(filterPattern)) {
+                            filteredList.add(teacher);
+                        }
+                    }
+                }
+                FilterResults results = new FilterResults();
+                results.values = filteredList;
+                return results;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                teacherList.clear();
+                teacherList.addAll((List<Teacher>) results.values);
+                notifyDataSetChanged();
+                if (context instanceof ViewTeacherActivity) {
+                    ((ViewTeacherActivity) context).checkNoResults(); // Notify activity to check results
+                }
+            }
+        };
     }
 }
