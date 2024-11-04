@@ -84,6 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert("classes", null, values);
         db.close();
     }
+
     public List<Teacher> getAllTeachers() {
         List<Teacher> teacherList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_TEACHERS;
@@ -111,6 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.update(TABLE_TEACHERS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
     }
+
     public void deleteTeacher(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_TEACHERS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
@@ -168,4 +170,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return classList;
     }
+
 }

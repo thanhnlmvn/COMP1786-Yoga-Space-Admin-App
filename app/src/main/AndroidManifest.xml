@@ -23,6 +23,7 @@
         <activity android:name=".AddClassActivity" android:exported="true"/>
         <activity android:name=".ClassDetailActivity" android:exported="true"/>
 
+
     </application>
 
 </manifest>
