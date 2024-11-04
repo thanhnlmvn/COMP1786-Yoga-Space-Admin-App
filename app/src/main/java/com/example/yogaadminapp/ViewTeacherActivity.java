@@ -10,7 +10,8 @@ import java.util.List;
 
 public class ViewTeacherActivity extends AppCompatActivity {
 
-    private static final int ADD_TEACHER_REQUEST = 1; // Request code for Intent
+    public static final int ADD_TEACHER_REQUEST = 1;
+    public static final int EDIT_TEACHER_REQUEST = 2; // Change this line to public
     private DatabaseHelper databaseHelper;
     private ListView listViewTeachers;
 
@@ -27,19 +28,17 @@ public class ViewTeacherActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ViewTeacherActivity.this, AddTeacherActivity.class);
-                startActivityForResult(intent, ADD_TEACHER_REQUEST); // Start AddTeacherActivity
+                startActivityForResult(intent, ADD_TEACHER_REQUEST);
             }
         });
 
-        // Display the list of teachers
         displayTeachers();
     }
 
-    // Called back when returning from AddTeacherActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_TEACHER_REQUEST && resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             displayTeachers(); // Refresh the teacher list
         }
     }

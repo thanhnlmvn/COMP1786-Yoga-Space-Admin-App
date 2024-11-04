@@ -1,6 +1,7 @@
 package com.example.yogaadminapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
-
 import java.util.List;
 
 public class TeacherAdapter extends ArrayAdapter<Teacher> {
@@ -34,11 +34,19 @@ public class TeacherAdapter extends ArrayAdapter<Teacher> {
         TextView textViewTeacherName = itemView.findViewById(R.id.textViewTeacherName);
         TextView textViewTeacherEmail = itemView.findViewById(R.id.textViewTeacherEmail);
         Button buttonDeleteTeacher = itemView.findViewById(R.id.buttonDeleteTeacher);
+        Button buttonEditTeacher = itemView.findViewById(R.id.buttonEditTeacher);
 
         textViewTeacherName.setText(teacher.getName());
-        textViewTeacherEmail.setText(teacher.getEmail()); // Hiển thị email
+        textViewTeacherEmail.setText(teacher.getEmail());
 
         buttonDeleteTeacher.setOnClickListener(v -> showDeleteConfirmationDialog(teacher));
+        buttonEditTeacher.setOnClickListener(v -> {
+            Intent intent = new Intent(context, EditTeacherActivity.class);
+            intent.putExtra("TEACHER_ID", teacher.getId());
+            intent.putExtra("TEACHER_NAME", teacher.getName());
+            intent.putExtra("TEACHER_EMAIL", teacher.getEmail());
+            ((ViewTeacherActivity) context).startActivityForResult(intent, ViewTeacherActivity.EDIT_TEACHER_REQUEST);
+        });
 
         return itemView;
     }

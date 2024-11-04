@@ -16,13 +16,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ViewClassActivity"
-            android:exported="true"/>
-        <activity android:name=".ViewTeacherActivity"
-            android:exported="true"/>
+        <activity android:name=".ViewClassActivity" android:exported="true"/>
+        <activity android:name=".ViewTeacherActivity" android:exported="true"/>
         <activity android:name=".AddTeacherActivity" android:exported="true"/>
-        <activity android:name=".ViewTeacherActivity"
-            android:exported="true"/>
+        <activity android:name=".EditTeacherActivity" android:exported="true"/>
 
     </application>
 
