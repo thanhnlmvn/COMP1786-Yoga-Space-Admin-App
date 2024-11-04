@@ -5,11 +5,24 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <EditText
+        android:id="@+id/editTextSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search by Teacher Name" />
+
     <Button
         android:id="@+id/buttonAddTeacher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Teacher" />
+
+    <TextView
+        android:id="@+id/textViewNoResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No teachers found"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/listViewTeachers"

@@ -36,7 +36,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Thêm giáo viên
     public void addTeacher(String name, String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -46,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Lấy danh sách giáo viên
+
     public List<Teacher> getAllTeachers() {
         List<Teacher> teacherList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_TEACHERS;
@@ -67,10 +66,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return teacherList;
     }
 
-    // Xóa giáo viên
     public void deleteTeacher(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_TEACHERS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
     }
+
+    public void updateTeacher(int id, String name, String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, name);
+        values.put(COLUMN_EMAIL, email);
+        db.update(TABLE_TEACHERS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+
 }
