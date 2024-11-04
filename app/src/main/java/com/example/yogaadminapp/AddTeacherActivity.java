@@ -29,16 +29,17 @@ public class AddTeacherActivity extends AppCompatActivity {
                 String email = editTextEmail.getText().toString().trim();
 
                 if (!name.isEmpty() && !email.isEmpty()) {
-                    databaseHelper.addTeacher(name, email);
+                    databaseHelper.addTeacher(name, email); // Pass the name and email strings
                     Toast.makeText(AddTeacherActivity.this, "Teacher added!", Toast.LENGTH_SHORT).show();
 
-                    // Trả về kết quả cho ViewTeacherActivity
+                    // Return result to ViewTeacherActivity
                     setResult(RESULT_OK);
-                    finish(); // Trở về Activity trước đó
+                    finish(); // Go back to the previous Activity
                 } else {
                     Toast.makeText(AddTeacherActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 }
             }
+
         });
     }
 }
