@@ -13,7 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import java.util.ArrayList;
-import java.util.List;
+
+
 
 public class TeacherAdapter extends ArrayAdapter<Teacher> implements Filterable {
 

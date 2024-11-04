@@ -15,7 +15,9 @@ import java.util.List;
 public class ViewTeacherActivity extends AppCompatActivity {
 
     public static final int ADD_TEACHER_REQUEST = 1;
+
     public static final int EDIT_TEACHER_REQUEST = 2;
+
 
     private DatabaseHelper databaseHelper;
     private ListView listViewTeachers;
@@ -44,6 +46,7 @@ public class ViewTeacherActivity extends AppCompatActivity {
             }
         });
 
+
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -56,6 +59,7 @@ public class ViewTeacherActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+
     }
 
     @Override
