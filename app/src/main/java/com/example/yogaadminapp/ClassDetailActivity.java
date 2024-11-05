@@ -2,6 +2,7 @@ package com.example.yogaadminapp;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ClassDetailActivity extends AppCompatActivity {
@@ -14,7 +15,7 @@ public class ClassDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_detail);
 
-        // Initialize views
+        // Khởi tạo các view
         textViewDate = findViewById(R.id.textViewDate);
         textViewTime = findViewById(R.id.textViewTime);
         textViewTeacher = findViewById(R.id.textViewTeacher);
@@ -26,25 +27,30 @@ public class ClassDetailActivity extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(this);
 
-        // Get CLASS_ID from Intent
+        // Nhận CLASS_ID từ Intent
         int classId = getIntent().getIntExtra("CLASS_ID", -1);
         if (classId != -1) {
-            YogaClass yogaClass = databaseHelper.getClassById(classId);
-            if (yogaClass != null) {
-                // Populate the TextViews with data
-                textViewDate.setText("Date: " + yogaClass.getDate());
-                textViewTime.setText("Time: " + yogaClass.getTime());
-                textViewTeacher.setText("Teacher: " + yogaClass.getTeacherName());
-                textViewDescription.setText("Description: " + (yogaClass.getDescription().isEmpty() ? "N/A" : yogaClass.getDescription()));
-                textViewCapacity.setText("Capacity: " + yogaClass.getCapacity());
-                textViewDuration.setText("Duration: " + yogaClass.getDuration() + " mins");
-                textViewPrice.setText("Price: $" + yogaClass.getPrice());
-                textViewClassType.setText("Class Type: " + yogaClass.getClassType());
-            } else {
-                finish(); // Close the activity if class not found
-            }
+            loadClassDetails(classId);
         } else {
-            finish(); // Close the activity if no CLASS_ID was passed
+            Toast.makeText(this, "Error: Class ID not found.", Toast.LENGTH_SHORT).show();
+            finish(); // Đóng Activity nếu không nhận được ID hợp lệ
+        }
+    }
+
+    private void loadClassDetails(int classId) {
+        YogaClass yogaClass = databaseHelper.getClassById(classId);
+        if (yogaClass != null) {
+            textViewDate.setText("Date: " + yogaClass.getDate());
+            textViewTime.setText("Time: " + yogaClass.getTime());
+            textViewTeacher.setText("Teacher: " + yogaClass.getTeacherName());
+            textViewDescription.setText("Description: " + (yogaClass.getDescription().isEmpty() ? "N/A" : yogaClass.getDescription()));
+            textViewCapacity.setText("Capacity: " + yogaClass.getCapacity());
+            textViewDuration.setText("Duration: " + yogaClass.getDuration() + " mins");
+            textViewPrice.setText("Price: $" + yogaClass.getPrice());
+            textViewClassType.setText("Class Type: " + yogaClass.getClassType());
+        } else {
+            Toast.makeText(this, "Error: Class not found.", Toast.LENGTH_SHORT).show();
+            finish(); // Đóng Activity nếu không tìm thấy lớp học
         }
     }
 }

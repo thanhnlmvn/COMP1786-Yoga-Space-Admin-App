@@ -24,14 +24,55 @@
         android:text="Teacher" />
 
     <TextView
+        android:id="@+id/textViewClassType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Class Type"
+        android:textSize="16sp"
+        android:paddingBottom="4dp" />
+
+    <TextView
+        android:id="@+id/textViewPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Price: "
+        android:textSize="16sp" />
+
+    <TextView
         android:id="@+id/textViewDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Description" />
 
-    <Button
-        android:id="@+id/buttonDetail"
-        android:layout_width="wrap_content"
+
+    <!-- Layout ngang để chứa ba nút -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Detail" />
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingTop="8dp">
+
+        <Button
+            android:id="@+id/buttonDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Detail" />
+
+        <Button
+            android:id="@+id/buttonDeleteClass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Delete" />
+
+        <Button
+            android:id="@+id/buttonEditClass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Edit" />
+    </LinearLayout>
+
 </LinearLayout>

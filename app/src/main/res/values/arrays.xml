@@ -5,4 +5,11 @@
         <item>Aerial Yoga</item>
         <item>Family Yoga</item>
     </string-array>
+
+    <string-array name="price_ranges">
+        <item>All</item>
+        <item>$0 - $50</item>
+        <item>$50 - $100</item>
+        <item>$100+</item>
+    </string-array>
 </resources>

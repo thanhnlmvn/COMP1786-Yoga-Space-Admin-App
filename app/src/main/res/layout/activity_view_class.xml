@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Button to add a new class -->
     <Button
         android:id="@+id/buttonAddClass"
         android:layout_width="match_parent"
@@ -13,7 +12,20 @@
         android:text="Add Class"
         android:layout_marginBottom="16dp" />
 
-    <!-- ListView to display the classes -->
+    <AutoCompleteTextView
+        android:id="@+id/editTextSearchTeacher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search by Teacher Name"
+        android:inputType="text"
+        android:layout_marginBottom="8dp" />
+
+    <Spinner
+        android:id="@+id/spinnerFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/select_filter" />
+
     <ListView
         android:id="@+id/listViewClasses"
         android:layout_width="match_parent"
