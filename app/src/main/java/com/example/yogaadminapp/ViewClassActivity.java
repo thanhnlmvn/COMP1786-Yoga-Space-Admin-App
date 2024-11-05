@@ -7,11 +7,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Spinner;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +27,10 @@ public class ViewClassActivity extends AppCompatActivity {
     private ListView listViewClasses;
     private Button buttonAddClass;
     private AutoCompleteTextView editTextSearchTeacher; // Using AutoCompleteTextView for search
+    private Button buttonSelectClassType; // Button to select class type
     private List<YogaClass> allClasses; // Store all classes to filter
     private List<String> teacherNames; // List of teacher names
+    private List<String> classTypes; // List of class types
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +41,18 @@ public class ViewClassActivity extends AppCompatActivity {
         listViewClasses = findViewById(R.id.listViewClasses);
         buttonAddClass = findViewById(R.id.buttonAddClass);
         editTextSearchTeacher = findViewById(R.id.editTextSearchTeacher); // Initialize AutoCompleteTextView
+        buttonSelectClassType = findViewById(R.id.buttonSelectClassType); // Initialize button for class type selection
 
         displayFilteredClasses(); // Display existing classes
         setupTeacherNames(); // Get teacher names and set up AutoCompleteTextView
+        setupClassTypes(); // Setup class types from database
 
         buttonAddClass.setOnClickListener(v -> {
             Intent intent = new Intent(ViewClassActivity.this, AddClassActivity.class);
             startActivityForResult(intent, ADD_CLASS_REQUEST);
         });
+
+        buttonSelectClassType.setOnClickListener(v -> showClassTypeDialog());
 
         // Set up TextWatcher for search field
         editTextSearchTeacher.addTextChangedListener(new TextWatcher() {
@@ -68,6 +77,36 @@ public class ViewClassActivity extends AppCompatActivity {
         editTextSearchTeacher.setThreshold(1); // Show suggestions after one character
     }
 
+    private void setupClassTypes() {
+        classTypes = databaseHelper.getAllClassTypes(); // Get class types from the database
+    }
+
+    private void showClassTypeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Inflate the custom layout
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_select_class_type, null);
+        builder.setView(dialogView);
+
+        // Get the spinner from the dialog layout
+        Spinner spinnerClassType = dialogView.findViewById(R.id.spinnerClassType);
+        ArrayAdapter<String> classTypeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, classTypes);
+        classTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerClassType.setAdapter(classTypeAdapter);
+
+        // Handle selection of class type
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String selectedClassType = classTypes.get(spinnerClassType.getSelectedItemPosition());
+            filterClassesByClassType(selectedClassType);
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        // Show dialog
+        builder.create().show();
+    }
+
+
     private void displayFilteredClasses() {
         allClasses = databaseHelper.getAllClasses(); // Get all classes
         if (allClasses.isEmpty()) {
@@ -90,6 +129,22 @@ public class ViewClassActivity extends AppCompatActivity {
 
         if (filteredClasses.isEmpty()) {
             Toast.makeText(this, "No classes found for the specified teacher name.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void filterClassesByClassType(String classType) {
+        List<YogaClass> filteredClasses = new ArrayList<>();
+        for (YogaClass yogaClass : allClasses) {
+            if (yogaClass.getClassType().equals(classType)) {
+                filteredClasses.add(yogaClass);
+            }
+        }
+
+        ClassAdapter adapter = new ClassAdapter(this, filteredClasses);
+        listViewClasses.setAdapter(adapter);
+
+        if (filteredClasses.isEmpty()) {
+            Toast.makeText(this, "No classes found for the selected class type.", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -175,12 +176,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteClassesByTeacher(String teacherName) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CLASSES, COLUMN_TEACHER_NAME + " = ?", new String[]{teacherName});
-        db.close();
-    }
-
     public void updateClass(int id, String date, String time, int capacity, int duration, double price, String classType, String teacherName, String description) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -196,81 +191,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Search classes by teacher name
-    public List<YogaClass> getClassesByTeacher(String teacherName) {
-        List<YogaClass> classList = new ArrayList<>();
+    public List<String> getAllClassTypes() {
+        List<String> classTypes = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLASSES, null, COLUMN_TEACHER_NAME + " LIKE ?",
-                new String[]{"%" + teacherName + "%"}, null, null, null);
+        Cursor cursor = db.rawQuery("SELECT DISTINCT class_type FROM " + TABLE_CLASSES, null); // Ensure the SQL query is correct
 
-        if (cursor != null && cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
-                YogaClass yogaClass = new YogaClass(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CAPACITY)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_DURATION)),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CLASS_TYPE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEACHER_NAME)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION))
-                );
-                classList.add(yogaClass);
+                classTypes.add(cursor.getString(0)); // Get class type from the first column
             } while (cursor.moveToNext());
-            cursor.close();
         }
+        cursor.close();
         db.close();
-        return classList;
-    }
-
-    // Flexible filter method for class type, date range, and price range
-    public List<YogaClass> getClassesByFilter(String classType, String startDate, String endDate, double minPrice, double maxPrice) {
-        List<YogaClass> classList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        StringBuilder selection = new StringBuilder();
-        List<String> selectionArgs = new ArrayList<>();
-
-        if (classType != null && !classType.equals("All")) {
-            selection.append(COLUMN_CLASS_TYPE).append(" = ?");
-            selectionArgs.add(classType);
-        }
-
-        if (startDate != null && endDate != null) {
-            if (selection.length() > 0) selection.append(" AND ");
-            selection.append(COLUMN_DATE).append(" BETWEEN ? AND ?");
-            selectionArgs.add(startDate);
-            selectionArgs.add(endDate);
-        }
-
-        if (minPrice >= 0 && maxPrice != Double.MAX_VALUE) {
-            if (selection.length() > 0) selection.append(" AND ");
-            selection.append(COLUMN_PRICE).append(" BETWEEN ? AND ?");
-            selectionArgs.add(String.valueOf(minPrice));
-            selectionArgs.add(String.valueOf(maxPrice));
-        }
-
-        Cursor cursor = db.query(TABLE_CLASSES, null, selection.toString(), selectionArgs.toArray(new String[0]), null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                YogaClass yogaClass = new YogaClass(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CAPACITY)),
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_DURATION)),
-                        cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CLASS_TYPE)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEACHER_NAME)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION))
-                );
-                classList.add(yogaClass);
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-        db.close();
-        return classList;
+        return classTypes;
     }
 }
