@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class TeacherAdapter extends ArrayAdapter<Teacher> implements Filterable {
 
     private Context context;
