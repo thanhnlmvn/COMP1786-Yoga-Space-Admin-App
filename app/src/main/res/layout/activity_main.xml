@@ -3,17 +3,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#E7C8A7"
+    android:gravity="top|center_horizontal">
 
+    <!-- Logo ImageView -->
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/logo"
+        android:contentDescription="Logo"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Admin app"
+        android:textColor="#2C3E50"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manage classes and teachers effectively"
+        android:textColor="#2C3E50"
+        android:textSize="14sp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Button for viewing classes -->
     <Button
         android:id="@+id/buttonViewClass"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:text="View Classes" />
+        android:text="View Classes"
+        android:backgroundTint="#D1A570"
+        android:textColor="#2C3E50"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp" />
 
+    <!-- Button for viewing teachers -->
     <Button
         android:id="@+id/buttonViewTeacher"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:text="View Teachers" />
+        android:text="View Teachers"
+        android:backgroundTint="#D1A570"
+        android:textColor="#2C3E50"
+        android:padding="12dp"
+        android:textSize="16sp" />
+
 </LinearLayout>
