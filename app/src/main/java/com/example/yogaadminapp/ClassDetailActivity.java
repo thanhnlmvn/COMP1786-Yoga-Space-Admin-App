@@ -1,6 +1,8 @@
 package com.example.yogaadminapp;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +26,15 @@ public class ClassDetailActivity extends AppCompatActivity {
         textViewDuration = findViewById(R.id.textViewDuration);
         textViewPrice = findViewById(R.id.textViewPrice);
         textViewClassType = findViewById(R.id.textViewClassType);
+
+        // Khởi tạo nút back
+        ImageButton buttonBack = findViewById(R.id.buttonBack);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed(); // Quay lại Activity trước đó
+            }
+        });
 
         databaseHelper = new DatabaseHelper(this);
 

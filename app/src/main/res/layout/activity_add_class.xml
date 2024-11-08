@@ -2,74 +2,211 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F7EFE5"
     android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
+        <!-- Nút Back -->
+        <ImageButton
+            android:id="@+id/buttonBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:layout_gravity="start"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Logo -->
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/logo"
+            android:contentDescription="Logo"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add a new class"
+            android:textColor="#3E4A59"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Date Selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Class Date"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold"/>
         <EditText
             android:id="@+id/editTextDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Select Date"
+            android:background="@drawable/rounded_edittext"
+            android:padding="8dp"
+            android:drawableStart="@drawable/ic_calendar"
+            android:drawablePadding="6dp"
             android:focusable="false"
-            android:clickable="true" />
+            android:clickable="true"
+            android:layout_marginBottom="12dp" />
 
+        <!-- Time Selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Class Time"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold"/>
         <EditText
             android:id="@+id/editTextTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Select Time"
+            android:background="@drawable/rounded_edittext"
+            android:padding="8dp"
+            android:drawableStart="@drawable/ic_time"
+            android:drawablePadding="6dp"
             android:focusable="false"
-            android:clickable="true" />
+            android:clickable="true"
+            android:layout_marginBottom="12dp" />
 
+        <!-- Class Capacity -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Capacity"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold"/>
         <EditText
             android:id="@+id/editTextCapacity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Capacity"
-            android:inputType="number" />
+            android:hint="Enter Capacity"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="number"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
 
+        <!-- Duration -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Duration"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold"/>
         <EditText
             android:id="@+id/editTextDuration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Duration (in minutes)"
-            android:inputType="number" />
+            android:hint="Duration (minutes)"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="number"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
 
+        <!-- Price -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Price per Class (£)"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold"/>
         <EditText
             android:id="@+id/editTextPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Price per Class (£)"
-            android:inputType="numberDecimal" />
+            android:hint="Enter Price"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
 
+        <!-- Class Type Spinner -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Class Type"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold"/>
         <Spinner
             android:id="@+id/spinnerClassType"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_spinner"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp" />
 
+        <!-- Teacher Name -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Teacher Name"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold"/>
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTeacherName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Teacher Name"
-            android:inputType="text" />
+            android:hint="Enter Teacher Name"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="text"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
 
+        <!-- Class Description -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold"/>
         <EditText
             android:id="@+id/editTextDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description (optional)"
-            android:inputType="textMultiLine" />
+            android:hint="Enter Description (optional)"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="textMultiLine"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
 
+        <!-- Add Class Button -->
         <Button
             android:id="@+id/buttonAddClass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Class" />
-
+            android:text="Add Class"
+            android:backgroundTint="#D1A570"
+            android:textColor="#FFFFFF"
+            android:padding="12dp"
+            android:textSize="16sp" />
     </LinearLayout>
 </ScrollView>

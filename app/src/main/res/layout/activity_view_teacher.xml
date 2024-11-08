@@ -3,29 +3,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#F7EFE5"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/editTextSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search by Teacher Name" />
-
+    <!-- Nút thêm giáo viên -->
     <Button
         android:id="@+id/buttonAddTeacher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Teacher" />
+        android:text="Add Teacher"
+        android:backgroundTint="#D1A570"
+        android:textColor="#FFFFFF"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp" />
 
+    <!-- Tìm kiếm theo tên giáo viên -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search by Teacher Name"
+        android:textColor="#3E4A59"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
+    <EditText
+        android:id="@+id/editTextSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Teacher Name"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Thông báo khi không có kết quả -->
     <TextView
         android:id="@+id/textViewNoResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No teachers found"
-        android:visibility="gone" />
+        android:textColor="#7A7E83"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Danh sách giáo viên -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Teacher List"
+        android:textColor="#3E4A59"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
 
     <ListView
         android:id="@+id/listViewTeachers"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:background="@drawable/rounded_listview_background"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp" />
 </LinearLayout>

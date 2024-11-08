@@ -1,72 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#F7EFE5">
 
-    <TextView
-        android:id="@+id/textViewDate"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Date"
-        android:textSize="18sp"
-        android:padding="4dp"/>
+        android:orientation="vertical"
+        android:background="@drawable/rounded_background"
+        android:padding="16dp"
+        android:layout_margin="8dp">
+        <ImageButton
+            android:id="@+id/buttonBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:layout_gravity="start"
+            android:layout_marginBottom="16dp"
+            android:onClick="onBackPressed"/>
 
-    <TextView
-        android:id="@+id/textViewTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Time"
-        android:textSize="18sp"
-        android:padding="4dp"/>
 
-    <TextView
-        android:id="@+id/textViewTeacher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Teacher"
-        android:textSize="18sp"
-        android:padding="4dp"/>
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/logo"
+            android:contentDescription="Logo"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="center" />
 
-    <TextView
-        android:id="@+id/textViewDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:textSize="18sp"
-        android:padding="4dp"/>
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Class Details"
+            android:textSize="22sp"
+            android:textColor="#3E4A59"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp" />
 
-    <TextView
-        android:id="@+id/textViewCapacity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Capacity"
-        android:textSize="18sp"
-        android:padding="4dp"/>
+        <!-- Date -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textColor="#7A7E83"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="N/A"
+            android:textSize="18sp"
+            android:textColor="#3E4A59"
+            android:layout_marginBottom="12dp" />
 
-    <TextView
-        android:id="@+id/textViewDuration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Duration"
-        android:textSize="18sp"
-        android:padding="4dp"/>
+        <!-- Time -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:textColor="#7A7E83"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/textViewTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="N/A"
+            android:textSize="18sp"
+            android:textColor="#3E4A59"
+            android:layout_marginBottom="12dp" />
 
-    <TextView
-        android:id="@+id/textViewPrice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Price"
-        android:textSize="18sp"
-        android:padding="4dp"/>
+        <!-- Teacher -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Teacher"
+            android:textColor="#7A7E83"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/textViewTeacher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="N/A"
+            android:textSize="18sp"
+            android:textColor="#3E4A59"
+            android:layout_marginBottom="12dp" />
 
-    <TextView
-        android:id="@+id/textViewClassType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Class Type"
-        android:textSize="18sp"
-        android:padding="4dp"/>
+        <!-- Description -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textColor="#7A7E83"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/textViewDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="N/A"
+            android:textSize="18sp"
+            android:textColor="#3E4A59"
+            android:layout_marginBottom="12dp" />
 
-</LinearLayout>
+        <!-- Capacity -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Capacity"
+            android:textColor="#7A7E83"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/textViewCapacity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="N/A"
+            android:textSize="18sp"
+            android:textColor="#3E4A59"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Duration -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Duration (minutes)"
+            android:textColor="#7A7E83"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/textViewDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="N/A"
+            android:textSize="18sp"
+            android:textColor="#3E4A59"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Price -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Price (£)"
+            android:textColor="#7A7E83"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="N/A"
+            android:textSize="18sp"
+            android:textColor="#3E4A59"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Class Type -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Class Type"
+            android:textColor="#7A7E83"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/textViewClassType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="N/A"
+            android:textSize="18sp"
+            android:textColor="#3E4A59"
+            android:layout_marginBottom="12dp" />
+
+    </LinearLayout>
+</ScrollView>

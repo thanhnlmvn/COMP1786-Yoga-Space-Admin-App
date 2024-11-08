@@ -2,83 +2,202 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F7EFE5"
     android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-        <!-- EditText for Date -->
+        <!-- Nút Back -->
+        <ImageButton
+            android:id="@+id/buttonBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:layout_gravity="start"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Tiêu đề -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Class Details"
+            android:textColor="#3E4A59"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Ngày lớp học -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Class Date"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
         <EditText
             android:id="@+id/editTextDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Select Date"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp"
+            android:drawableStart="@drawable/ic_calendar"
+            android:drawablePadding="6dp"
             android:focusable="false"
-            android:clickable="true" />
+            android:clickable="true"
+            android:layout_marginBottom="12dp" />
 
-        <!-- EditText for Time -->
+        <!-- Thời gian -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Class Time"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
         <EditText
             android:id="@+id/editTextTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Select Time"
+            android:background="@drawable/rounded_edittext"
+            android:padding="12dp"
+            android:drawableStart="@drawable/ic_time"
+            android:drawablePadding="6dp"
             android:focusable="false"
-            android:clickable="true" />
+            android:clickable="true"
+            android:layout_marginBottom="12dp" />
 
-        <!-- EditText for Capacity -->
+        <!-- Sức chứa -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Capacity"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
         <EditText
             android:id="@+id/editTextCapacity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Capacity"
-            android:inputType="number" />
+            android:hint="Enter Capacity"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="number"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
 
-        <!-- EditText for Duration -->
+        <!-- Thời lượng -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Duration (minutes)"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
         <EditText
             android:id="@+id/editTextDuration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Duration (in minutes)"
-            android:inputType="number" />
+            android:hint="Duration"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="number"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
 
-        <!-- EditText for Price -->
+        <!-- Giá mỗi lớp -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Price per Class (£)"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
         <EditText
             android:id="@+id/editTextPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Price per Class (£)"
-            android:inputType="numberDecimal" />
+            android:hint="Enter Price"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
 
-        <!-- Spinner for Class Type -->
+        <!-- Loại lớp học -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Class Type"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
         <Spinner
             android:id="@+id/spinnerClassType"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_spinner"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp" />
 
-        <!-- AutoCompleteTextView for Teacher Name -->
+        <!-- Tên giáo viên -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Teacher Name"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTeacherName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Teacher Name"
-            android:inputType="text" />
+            android:hint="Enter Teacher Name"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="text"
+            android:padding="12dp"
+            android:layout_marginBottom="12dp" />
 
-        <!-- EditText for Description -->
+        <!-- Mô tả -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textColor="#3E4A59"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
         <EditText
             android:id="@+id/editTextDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description (optional)"
-            android:inputType="textMultiLine" />
+            android:hint="Enter Description (optional)"
+            android:background="@drawable/rounded_edittext"
+            android:inputType="textMultiLine"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
 
-        <!-- Button for Updating Class -->
+        <!-- Nút cập nhật lớp học -->
         <Button
             android:id="@+id/buttonUpdateClass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Update Class" />
-
+            android:text="Update Class"
+            android:backgroundTint="#D1A570"
+            android:textColor="#FFFFFF"
+            android:padding="12dp"
+            android:textSize="16sp" />
     </LinearLayout>
 </ScrollView>

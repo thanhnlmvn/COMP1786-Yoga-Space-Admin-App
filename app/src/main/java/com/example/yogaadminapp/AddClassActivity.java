@@ -7,10 +7,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +31,7 @@ public class AddClassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_class);
 
         // Initialize views
+        ImageButton buttonBack = findViewById(R.id.buttonBack);  // Nút Back
         editTextDate = findViewById(R.id.editTextDate);
         editTextTime = findViewById(R.id.editTextTime);
         editTextCapacity = findViewById(R.id.editTextCapacity);
@@ -43,6 +44,9 @@ public class AddClassActivity extends AppCompatActivity {
 
         // Initialize database helper
         databaseHelper = new DatabaseHelper(this);
+
+        // Set up Back button
+        buttonBack.setOnClickListener(v -> finish()); // Kết thúc Activity khi nhấn nút Back
 
         // Get teacher names from the database
         teacherNames = getTeacherNamesFromDatabase();
