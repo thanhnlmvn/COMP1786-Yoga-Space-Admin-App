@@ -105,6 +105,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return teacherList;
     }
 
+    public List<String> getAllTeacherNames() {
+        List<String> teacherNames = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLUMN_NAME + " FROM " + TABLE_TEACHERS, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                teacherNames.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return teacherNames;
+    }
+
     public void updateTeacher(int id, String name, String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -120,13 +135,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor != null && cursor.moveToFirst()) {
             String teacherName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
             cursor.close();
-
-            // Xóa các lớp học liên quan đến giáo viên
             deleteClassesByTeacherName(teacherName);
         }
         db.close();
 
-        // Sau khi xóa các lớp, xóa giáo viên
         db = this.getWritableDatabase();
         db.delete(TABLE_TEACHERS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();

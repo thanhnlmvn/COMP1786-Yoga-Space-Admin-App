@@ -30,7 +30,7 @@ public class ViewClassActivity extends AppCompatActivity {
     private Button buttonAddClass;
     private AutoCompleteTextView editTextSearchTeacher;
     private EditText editTextSearchDate;
-    private Spinner spinnerClassType; // Spinner for class type selection
+    private Spinner spinnerClassType;
     private List<YogaClass> allClasses;
 
     @Override
@@ -58,6 +58,20 @@ public class ViewClassActivity extends AppCompatActivity {
         // Set up DatePickerDialog for date search
         editTextSearchDate.setOnClickListener(v -> showDatePickerDialog());
 
+        // Set up teacher name suggestions
+        setupTeacherNameSuggestions();
+
+        // Set up Spinner for class type selection
+        setupClassTypeSpinner();
+    }
+
+    // Method to set up teacher name suggestions
+    private void setupTeacherNameSuggestions() {
+        List<String> teacherNames = databaseHelper.getAllTeacherNames(); // Assume this method returns a list of all teacher names
+        ArrayAdapter<String> teacherAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, teacherNames);
+        editTextSearchTeacher.setAdapter(teacherAdapter);
+        editTextSearchTeacher.setThreshold(1); // Start showing suggestions after typing one character
+
         // Set up TextWatcher for teacher name search
         editTextSearchTeacher.addTextChangedListener(new TextWatcher() {
             @Override
@@ -71,15 +85,12 @@ public class ViewClassActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {}
         });
-
-        // Set up Spinner for class type selection
-        setupClassTypeSpinner();
     }
 
     // Method to set up class type spinner
     private void setupClassTypeSpinner() {
         List<String> classTypes = databaseHelper.getAllClassTypes();
-        classTypes.add(0, "All Types"); // Add option for all types
+        classTypes.add(0, "All Types");
 
         ArrayAdapter<String> classTypeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, classTypes);
         classTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
