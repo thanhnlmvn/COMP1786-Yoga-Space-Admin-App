@@ -115,8 +115,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void deleteTeacher(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_TEACHERS, new String[]{COLUMN_NAME}, COLUMN_ID + " = ?", new String[]{String.valueOf(id)}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            String teacherName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
+            cursor.close();
+
+            // Xóa các lớp học liên quan đến giáo viên
+            deleteClassesByTeacherName(teacherName);
+        }
+        db.close();
+
+        // Sau khi xóa các lớp, xóa giáo viên
+        db = this.getWritableDatabase();
         db.delete(TABLE_TEACHERS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+
+    public void deleteClassesByTeacherName(String teacherName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_CLASSES, COLUMN_TEACHER_NAME + " = ?", new String[]{teacherName});
         db.close();
     }
 
@@ -194,11 +212,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<String> getAllClassTypes() {
         List<String> classTypes = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT DISTINCT class_type FROM " + TABLE_CLASSES, null); // Ensure the SQL query is correct
+        Cursor cursor = db.rawQuery("SELECT DISTINCT class_type FROM " + TABLE_CLASSES, null);
 
         if (cursor.moveToFirst()) {
             do {
-                classTypes.add(cursor.getString(0)); // Get class type from the first column
+                classTypes.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
         cursor.close();

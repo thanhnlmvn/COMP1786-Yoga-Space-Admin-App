@@ -3,34 +3,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#F7EFE5"
     android:padding="16dp">
+
+    <!-- Nút Add Class -->
     <Button
         android:id="@+id/buttonAddClass"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Class"
-        android:layout_marginTop="8dp" />
-
+        android:backgroundTint="#D1A570"
+        android:textColor="#FFFFFF"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp" />
+    <!-- Tìm kiếm theo tên giáo viên -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search by Teacher Name"
+        android:textColor="#3E4A59"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
     <AutoCompleteTextView
         android:id="@+id/editTextSearchTeacher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search by Teacher Name" />
-
-    <Button
-        android:id="@+id/buttonSelectClassType"
+        android:hint="Enter Teacher Name"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp" />
+    <!-- Tìm kiếm theo ngày -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Select Class Type" />
+        android:text="Search by Date"
+        android:textColor="#3E4A59"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
+    <EditText
+        android:id="@+id/editTextSearchDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select Date"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp"
+        android:focusable="false"
+        android:clickable="true"
+        android:layout_marginBottom="12dp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select class type"
+        android:textColor="#3E4A59"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
+    <!-- Lựa chọn loại lớp -->
+    <Spinner
+        android:id="@+id/spinnerClassType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:hint="Select Class Type" />
+
+    <!-- Danh sách lớp học -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Classes List"
+        android:textColor="#3E4A59"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
     <ListView
         android:id="@+id/listViewClasses"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="10dp"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="1dp"
+        android:background="@drawable/rounded_listview_background" />
 
 </LinearLayout>

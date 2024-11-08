@@ -3,47 +3,59 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="16dp"
+    android:background="@drawable/rounded_item_background"
+    android:layout_margin="8dp">
 
+    <!-- Tên Giáo viên -->
     <TextView
         android:id="@+id/textViewTeacherName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="#3E4A59"
+        android:layout_marginBottom="4dp" />
 
+    <!-- Email Giáo viên -->
     <TextView
         android:id="@+id/textViewTeacherEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:textColor="#7A7E83"
+        android:layout_marginBottom="12dp" />
 
+    <!-- Nút Edit và Delete -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="end"
         android:layout_marginTop="8dp">
-
-        <Button
-            android:id="@+id/buttonDeleteTeacher"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Delete" />
 
         <Button
             android:id="@+id/buttonEditTeacher"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Edit" />
-    </LinearLayout>
+            android:layout_weight="1"
+            android:text="Edit"
+            android:backgroundTint="#5BC0DE"
+            android:textColor="#FFFFFF"
+            android:padding="10dp"
+            android:textSize="14sp"
+            android:layout_marginEnd="8dp" />
 
-    <Button
-        android:id="@+id/buttonEditTeacher"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Edit"
-        android:layout_marginTop="8dp" />
+        <Button
+            android:id="@+id/buttonDeleteTeacher"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Delete"
+            android:backgroundTint="#E74C3C"
+            android:textColor="#FFFFFF"
+            android:padding="10dp"
+            android:textSize="14sp" />
+    </LinearLayout>
 
 </LinearLayout>

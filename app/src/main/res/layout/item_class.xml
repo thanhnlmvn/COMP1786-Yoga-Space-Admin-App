@@ -3,47 +3,70 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:background="@drawable/rounded_listview_background"
+    android:padding="16dp"
+    android:layout_margin="8dp">
 
+    <!-- Thông tin lớp học -->
     <TextView
         android:id="@+id/textViewDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Date" />
+        android:text="Date"
+        android:textColor="#3E4A59"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Time" />
+        android:text="Time"
+        android:textColor="#3E4A59"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewTeacher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Teacher" />
+        android:text="Teacher"
+        android:textColor="#3E4A59"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewClassType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Class Type"
-        android:textSize="16sp"
-        android:paddingBottom="4dp" />
+        android:textColor="#3E4A59"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Price: "
-        android:textSize="16sp" />
+        android:textColor="#3E4A59"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description" />
-
+        android:text="Description"
+        android:textColor="#3E4A59"
+        android:textSize="14sp"
+        android:layout_marginBottom="12dp"
+        android:textStyle="bold" />
 
     <!-- Layout ngang để chứa ba nút -->
     <LinearLayout
@@ -55,24 +78,35 @@
 
         <Button
             android:id="@+id/buttonDetail"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Detail" />
+            android:text="Detail"
+            android:backgroundTint="#D1A570"
+            android:textColor="#FFFFFF"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp" />
 
         <Button
             android:id="@+id/buttonDeleteClass"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Delete" />
+            android:text="Delete"
+            android:backgroundTint="#D9534F"
+            android:textColor="#FFFFFF"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp" />
 
         <Button
             android:id="@+id/buttonEditClass"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Edit" />
+            android:text="Edit"
+            android:backgroundTint="#5BC0DE"
+            android:textColor="#FFFFFF"
+            android:padding="10dp" />
     </LinearLayout>
 
 </LinearLayout>
