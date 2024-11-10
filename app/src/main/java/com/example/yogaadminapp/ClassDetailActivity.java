@@ -1,23 +1,49 @@
 package com.example.yogaadminapp;
 
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ClassDetailActivity extends AppCompatActivity {
 
-    private DatabaseHelper databaseHelper;
+    private DatabaseReference firebaseDatabaseRef;
     private TextView textViewDate, textViewTime, textViewTeacher, textViewDescription, textViewCapacity, textViewDuration, textViewPrice, textViewClassType;
+    private String firebaseId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_detail);
 
-        // Khởi tạo các view
+        // Initialize Firebase reference
+        firebaseDatabaseRef = FirebaseDatabase.getInstance().getReference("classes");
+
+        // Initialize views
+        initializeViews();
+
+        // Get firebaseId from Intent and load class details
+        firebaseId = getIntent().getStringExtra("FIREBASE_ID");
+        if (firebaseId != null && !firebaseId.isEmpty()) {
+            loadClassDetails(firebaseId);
+        } else {
+            Toast.makeText(this, "Error: Class ID not found.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        // Set up Back button functionality
+        ImageButton buttonBack = findViewById(R.id.buttonBack);
+        buttonBack.setOnClickListener(v -> onBackPressed());
+    }
+
+    private void initializeViews() {
         textViewDate = findViewById(R.id.textViewDate);
         textViewTime = findViewById(R.id.textViewTime);
         textViewTeacher = findViewById(R.id.textViewTeacher);
@@ -26,42 +52,33 @@ public class ClassDetailActivity extends AppCompatActivity {
         textViewDuration = findViewById(R.id.textViewDuration);
         textViewPrice = findViewById(R.id.textViewPrice);
         textViewClassType = findViewById(R.id.textViewClassType);
-
-        // Khởi tạo nút back
-        ImageButton buttonBack = findViewById(R.id.buttonBack);
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed(); // Quay lại Activity trước đó
-            }
-        });
-
-        databaseHelper = new DatabaseHelper(this);
-
-        // Nhận CLASS_ID từ Intent
-        int classId = getIntent().getIntExtra("CLASS_ID", -1);
-        if (classId != -1) {
-            loadClassDetails(classId);
-        } else {
-            Toast.makeText(this, "Error: Class ID not found.", Toast.LENGTH_SHORT).show();
-            finish(); // Đóng Activity nếu không nhận được ID hợp lệ
-        }
     }
 
-    private void loadClassDetails(int classId) {
-        YogaClass yogaClass = databaseHelper.getClassById(classId);
-        if (yogaClass != null) {
-            textViewDate.setText("Date: " + yogaClass.getDate());
-            textViewTime.setText("Time: " + yogaClass.getTime());
-            textViewTeacher.setText("Teacher: " + yogaClass.getTeacherName());
-            textViewDescription.setText("Description: " + (yogaClass.getDescription().isEmpty() ? "N/A" : yogaClass.getDescription()));
-            textViewCapacity.setText("Capacity: " + yogaClass.getCapacity());
-            textViewDuration.setText("Duration: " + yogaClass.getDuration() + " mins");
-            textViewPrice.setText("Price: $" + yogaClass.getPrice());
-            textViewClassType.setText("Class Type: " + yogaClass.getClassType());
-        } else {
-            Toast.makeText(this, "Error: Class not found.", Toast.LENGTH_SHORT).show();
-            finish(); // Đóng Activity nếu không tìm thấy lớp học
-        }
+    private void loadClassDetails(String firebaseId) {
+        firebaseDatabaseRef.child(firebaseId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                YogaClass yogaClass = snapshot.getValue(YogaClass.class);
+                if (yogaClass != null) {
+                    textViewDate.setText("Date: " + yogaClass.getDate());
+                    textViewTime.setText("Time: " + yogaClass.getTime());
+                    textViewTeacher.setText("Teacher: " + yogaClass.getTeacherName());
+                    textViewDescription.setText("Description: " + (yogaClass.getDescription().isEmpty() ? "N/A" : yogaClass.getDescription()));
+                    textViewCapacity.setText("Capacity: " + yogaClass.getCapacity());
+                    textViewDuration.setText("Duration: " + yogaClass.getDuration() + " mins");
+                    textViewPrice.setText("Price: $" + yogaClass.getPrice());
+                    textViewClassType.setText("Class Type: " + yogaClass.getClassType());
+                } else {
+                    Toast.makeText(ClassDetailActivity.this, "Error: Class not found.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(ClassDetailActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("FirebaseError", "Error loading data: ", databaseError.toException());
+            }
+        });
     }
 }

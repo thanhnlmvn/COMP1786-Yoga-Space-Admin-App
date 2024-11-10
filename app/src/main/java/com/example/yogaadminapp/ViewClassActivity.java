@@ -86,6 +86,7 @@ public class ViewClassActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     YogaClass yogaClass = snapshot.getValue(YogaClass.class);
                     if (yogaClass != null) {
+                        yogaClass.setFirebaseId(snapshot.getKey()); // Set Firebase ID
                         allClasses.add(yogaClass);
                     }
                 }
@@ -100,7 +101,6 @@ public class ViewClassActivity extends AppCompatActivity {
         });
     }
 
-    // Method to set up teacher name suggestions and add TextWatcher for filtering
     private void setupTeacherNameSuggestions() {
         DatabaseReference teachersRef = FirebaseDatabase.getInstance().getReference("teachers");
         teachersRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -117,7 +117,6 @@ public class ViewClassActivity extends AppCompatActivity {
                 editTextSearchTeacher.setAdapter(teacherAdapter);
                 editTextSearchTeacher.setThreshold(1);
 
-                // Add TextWatcher to filter classes by teacher name
                 editTextSearchTeacher.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -139,13 +138,12 @@ public class ViewClassActivity extends AppCompatActivity {
         });
     }
 
-    // Method to set up class type spinner and add OnItemSelectedListener for filtering
     private void setupClassTypeSpinner() {
         firebaseDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<String> classTypes = new ArrayList<>();
-                classTypes.add("All Types"); // Default option
+                classTypes.add("All Types");
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     YogaClass yogaClass = snapshot.getValue(YogaClass.class);
                     if (yogaClass != null && !classTypes.contains(yogaClass.getClassType())) {
@@ -156,7 +154,6 @@ public class ViewClassActivity extends AppCompatActivity {
                 classTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerClassType.setAdapter(classTypeAdapter);
 
-                // Add OnItemSelectedListener to filter classes by type
                 spinnerClassType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -175,7 +172,6 @@ public class ViewClassActivity extends AppCompatActivity {
         });
     }
 
-    // Method to filter classes by teacher name
     private void filterClassesByTeacherName(String teacherName) {
         List<YogaClass> filteredClasses = new ArrayList<>();
         for (YogaClass yogaClass : allClasses) {
@@ -186,7 +182,6 @@ public class ViewClassActivity extends AppCompatActivity {
         updateListView(filteredClasses, "No classes found for the specified teacher.");
     }
 
-    // Method to filter classes by class type
     private void filterClassesByType(String classType) {
         List<YogaClass> filteredClasses = new ArrayList<>();
         for (YogaClass yogaClass : allClasses) {
@@ -197,7 +192,6 @@ public class ViewClassActivity extends AppCompatActivity {
         updateListView(filteredClasses, "No classes found for the selected type.");
     }
 
-    // Method to display DatePickerDialog
     private void showDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
@@ -209,7 +203,6 @@ public class ViewClassActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    // Method to filter classes by date
     private void filterClassesByDate(String date) {
         List<YogaClass> filteredClasses = new ArrayList<>();
         for (YogaClass yogaClass : allClasses) {
@@ -220,7 +213,6 @@ public class ViewClassActivity extends AppCompatActivity {
         updateListView(filteredClasses, "No classes found for the selected date.");
     }
 
-    // Method to update ListView and show toast if empty
     private void updateListView(List<YogaClass> filteredClasses, String emptyMessage) {
         adapter = new ClassAdapter(this, filteredClasses);
         listViewClasses.setAdapter(adapter);
@@ -230,7 +222,6 @@ public class ViewClassActivity extends AppCompatActivity {
         }
     }
 
-    // Method to display all classes
     private void displayFilteredClasses() {
         adapter = new ClassAdapter(this, allClasses);
         listViewClasses.setAdapter(adapter);
