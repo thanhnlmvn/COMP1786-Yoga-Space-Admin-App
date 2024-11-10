@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +31,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_TEACHER_NAME = "teacher_name";
     private static final String COLUMN_DESCRIPTION = "description";
 
+    // Firebase Database reference
+    private final DatabaseReference firebaseDatabaseRef;
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        firebaseDatabaseRef = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -66,8 +72,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, name);
         values.put(COLUMN_EMAIL, email);
-        db.insert(TABLE_TEACHERS, null, values);
+        long id = db.insert(TABLE_TEACHERS, null, values);
         db.close();
+
+        if (id != -1) {
+            firebaseDatabaseRef.child("teachers").child(String.valueOf(id)).setValue(new Teacher((int) id, name, email));
+        }
     }
 
     public void addClass(String date, String time, int capacity, int duration, double price, String classType, String teacherName, String description) {
@@ -81,42 +91,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CLASS_TYPE, classType);
         values.put(COLUMN_TEACHER_NAME, teacherName);
         values.put(COLUMN_DESCRIPTION, description);
-        db.insert(TABLE_CLASSES, null, values);
+        long id = db.insert(TABLE_CLASSES, null, values);
         db.close();
+
+        if (id != -1) {
+            firebaseDatabaseRef.child("classes").child(String.valueOf(id)).setValue(new YogaClass((int) id, date, time, capacity, duration, price, classType, teacherName, description));
+        }
     }
 
     public List<Teacher> getAllTeachers() {
         List<Teacher> teacherList = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + TABLE_TEACHERS;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                Teacher teacher = new Teacher();
-                teacher.setId(cursor.getInt(0));
-                teacher.setName(cursor.getString(1));
-                teacher.setEmail(cursor.getString(2));
-                teacherList.add(teacher);
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + TABLE_TEACHERS, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    Teacher teacher = new Teacher();
+                    teacher.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                    teacher.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
+                    teacher.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL)));
+                    teacherList.add(teacher);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
         }
-        cursor.close();
-        db.close();
         return teacherList;
     }
 
     public List<String> getAllTeacherNames() {
         List<String> teacherNames = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + COLUMN_NAME + " FROM " + TABLE_TEACHERS, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                teacherNames.add(cursor.getString(0));
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT " + COLUMN_NAME + " FROM " + TABLE_TEACHERS, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    teacherNames.add(cursor.getString(0));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
         }
-        cursor.close();
-        db.close();
         return teacherNames;
     }
 
@@ -127,61 +146,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_EMAIL, email);
         db.update(TABLE_TEACHERS, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
+
+        firebaseDatabaseRef.child("teachers").child(String.valueOf(id)).setValue(new Teacher(id, name, email));
     }
 
     public void deleteTeacher(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_TEACHERS, new String[]{COLUMN_NAME}, COLUMN_ID + " = ?", new String[]{String.valueOf(id)}, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            String teacherName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
-            cursor.close();
-            deleteClassesByTeacherName(teacherName);
-        }
-        db.close();
-
-        db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_TEACHERS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
-    }
 
-    public void deleteClassesByTeacherName(String teacherName) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CLASSES, COLUMN_TEACHER_NAME + " = ?", new String[]{teacherName});
-        db.close();
+        firebaseDatabaseRef.child("teachers").child(String.valueOf(id)).removeValue();
     }
 
     public YogaClass getClassById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_CLASSES, null, COLUMN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
 
-        if (cursor != null && cursor.moveToFirst()) {
-            YogaClass yogaClass = new YogaClass(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CAPACITY)),
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_DURATION)),
-                    cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CLASS_TYPE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEACHER_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION))
-            );
-            cursor.close();
-            db.close();
-            return yogaClass;
-        }
-        db.close();
-        return null;
-    }
-
-    public List<YogaClass> getAllClasses() {
-        List<YogaClass> classList = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CLASSES, null, null, null, null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                YogaClass yogaClass = new YogaClass(
+        YogaClass yogaClass = null;
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                yogaClass = new YogaClass(
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME)),
@@ -192,18 +176,66 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEACHER_NAME)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION))
                 );
-                classList.add(yogaClass);
-            } while (cursor.moveToNext());
+            }
             cursor.close();
         }
         db.close();
+        return yogaClass;
+    }
+
+    public List<YogaClass> getAllClasses() {
+        List<YogaClass> classList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_CLASSES, null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    YogaClass yogaClass = new YogaClass(
+                            cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME)),
+                            cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CAPACITY)),
+                            cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_DURATION)),
+                            cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_PRICE)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CLASS_TYPE)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEACHER_NAME)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION))
+                    );
+                    classList.add(yogaClass);
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
         return classList;
+    }
+
+    public List<String> getAllClassTypes() {
+        List<String> classTypes = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT DISTINCT " + COLUMN_CLASS_TYPE + " FROM " + TABLE_CLASSES, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    classTypes.add(cursor.getString(0));
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) cursor.close();
+            db.close();
+        }
+        return classTypes;
     }
 
     public void deleteClass(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CLASSES, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
+
+        firebaseDatabaseRef.child("classes").child(String.valueOf(id)).removeValue();
     }
 
     public void updateClass(int id, String date, String time, int capacity, int duration, double price, String classType, String teacherName, String description) {
@@ -219,21 +251,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_DESCRIPTION, description);
         db.update(TABLE_CLASSES, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
+
+        firebaseDatabaseRef.child("classes").child(String.valueOf(id)).setValue(new YogaClass(id, date, time, capacity, duration, price, classType, teacherName, description));
     }
 
-    public List<String> getAllClassTypes() {
-        List<String> classTypes = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT DISTINCT class_type FROM " + TABLE_CLASSES, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                classTypes.add(cursor.getString(0));
-            } while (cursor.moveToNext());
+    public void syncTeachersToFirebase() {
+        List<Teacher> teacherList = getAllTeachers();
+        for (Teacher teacher : teacherList) {
+            firebaseDatabaseRef.child("teachers").child(String.valueOf(teacher.getId())).setValue(teacher);
         }
-        cursor.close();
-        db.close();
-        return classTypes;
     }
 
+    public void syncClassesToFirebase() {
+        List<YogaClass> classList = getAllClasses();
+        for (YogaClass yogaClass : classList) {
+            firebaseDatabaseRef.child("classes").child(String.valueOf(yogaClass.getId())).setValue(yogaClass);
+        }
+    }
 }
