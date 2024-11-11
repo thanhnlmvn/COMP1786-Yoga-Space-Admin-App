@@ -2,7 +2,6 @@ package com.example.yogaadminapp;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,11 +10,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClassDetailActivity extends AppCompatActivity {
 
     private DatabaseReference firebaseDatabaseRef;
-    private TextView textViewDate, textViewTime, textViewTeacher, textViewDescription, textViewCapacity, textViewDuration, textViewPrice, textViewClassType;
+    private TextView textViewDate, textViewTime, textViewTeacher, textViewDescription, textViewCapacity, textViewDuration, textViewPrice, textViewClassType, textViewBookedUsers;
     private String firebaseId;
 
     @Override
@@ -37,10 +38,6 @@ public class ClassDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "Error: Class ID not found.", Toast.LENGTH_SHORT).show();
             finish();
         }
-
-        // Set up Back button functionality
-        ImageButton buttonBack = findViewById(R.id.buttonBack);
-        buttonBack.setOnClickListener(v -> onBackPressed());
     }
 
     private void initializeViews() {
@@ -52,6 +49,7 @@ public class ClassDetailActivity extends AppCompatActivity {
         textViewDuration = findViewById(R.id.textViewDuration);
         textViewPrice = findViewById(R.id.textViewPrice);
         textViewClassType = findViewById(R.id.textViewClassType);
+        textViewBookedUsers = findViewById(R.id.textViewBookedUsers);
     }
 
     private void loadClassDetails(String firebaseId) {
@@ -68,6 +66,18 @@ public class ClassDetailActivity extends AppCompatActivity {
                     textViewDuration.setText("Duration: " + yogaClass.getDuration() + " mins");
                     textViewPrice.setText("Price: $" + yogaClass.getPrice());
                     textViewClassType.setText("Class Type: " + yogaClass.getClassType());
+
+                    // Lấy danh sách người dùng đã đặt chỗ
+                    List<String> bookedUsers = new ArrayList<>();
+                    for (DataSnapshot userSnapshot : snapshot.child("BookedUsers").getChildren()) {
+                        String userName = userSnapshot.getValue(String.class);
+                        bookedUsers.add(userName);
+                    }
+                    if (!bookedUsers.isEmpty()) {
+                        textViewBookedUsers.setText("Booked Users: " + String.join(", ", bookedUsers));
+                    } else {
+                        textViewBookedUsers.setText("No users booked yet.");
+                    }
                 } else {
                     Toast.makeText(ClassDetailActivity.this, "Error: Class not found.", Toast.LENGTH_SHORT).show();
                     finish();

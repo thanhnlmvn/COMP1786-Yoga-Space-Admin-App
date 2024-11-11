@@ -70,8 +70,8 @@ public class ClassAdapter extends ArrayAdapter<YogaClass> {
                     .setTitle("Delete Class")
                     .setMessage("Are you sure you want to delete this class?")
                     .setPositiveButton("Yes", (dialog, which) -> {
-                        // Delete class from local database
-                        databaseHelper.deleteClass(yogaClass.getId());
+                        // Delete class from local database and Firebase
+                        databaseHelper.deleteClass(yogaClass.getFirebaseId());
                         // Remove from list and update adapter
                         classList.remove(position);
                         notifyDataSetChanged();

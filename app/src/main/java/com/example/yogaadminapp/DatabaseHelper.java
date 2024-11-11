@@ -95,7 +95,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         if (id != -1) {
-            firebaseDatabaseRef.child("classes").child(String.valueOf(id)).setValue(new YogaClass((int) id, date, time, capacity, duration, price, classType, teacherName, description));
+            String firebaseId = firebaseDatabaseRef.child("classes").push().getKey(); // Lấy key tự động từ Firebase
+            YogaClass newClass = new YogaClass(firebaseId, date, time, capacity, duration, price, classType, teacherName, description);
+            firebaseDatabaseRef.child("classes").child(firebaseId).setValue(newClass);
         }
     }
 
@@ -166,7 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 yogaClass = new YogaClass(
-                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
                         cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME)),
                         cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CAPACITY)),
@@ -192,7 +194,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     YogaClass yogaClass = new YogaClass(
-                            cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID)),
                             cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
                             cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TIME)),
                             cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CAPACITY)),
@@ -230,15 +232,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return classTypes;
     }
 
-    public void deleteClass(int id) {
+    public void deleteClass(String firebaseId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CLASSES, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        db.delete(TABLE_CLASSES, COLUMN_ID + " = ?", new String[]{firebaseId});
         db.close();
 
-        firebaseDatabaseRef.child("classes").child(String.valueOf(id)).removeValue();
+        firebaseDatabaseRef.child("classes").child(firebaseId).removeValue();
     }
 
-    public void updateClass(int id, String date, String time, int capacity, int duration, double price, String classType, String teacherName, String description) {
+    public void updateClass(String firebaseId, String date, String time, int capacity, int duration, double price, String classType, String teacherName, String description) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_DATE, date);
@@ -249,12 +251,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CLASS_TYPE, classType);
         values.put(COLUMN_TEACHER_NAME, teacherName);
         values.put(COLUMN_DESCRIPTION, description);
-        db.update(TABLE_CLASSES, values, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        db.update(TABLE_CLASSES, values, COLUMN_ID + " = ?", new String[]{firebaseId});
         db.close();
 
-        firebaseDatabaseRef.child("classes").child(String.valueOf(id)).setValue(new YogaClass(id, date, time, capacity, duration, price, classType, teacherName, description));
+        firebaseDatabaseRef.child("classes").child(firebaseId).setValue(new YogaClass(firebaseId, date, time, capacity, duration, price, classType, teacherName, description));
     }
-
     public void syncTeachersToFirebase() {
         List<Teacher> teacherList = getAllTeachers();
         for (Teacher teacher : teacherList) {
@@ -267,5 +268,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         for (YogaClass yogaClass : classList) {
             firebaseDatabaseRef.child("classes").child(String.valueOf(yogaClass.getId())).setValue(yogaClass);
         }
-    }
+}
 }

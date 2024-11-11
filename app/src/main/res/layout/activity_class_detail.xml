@@ -179,8 +179,14 @@
             android:textSize="18sp"
             android:textColor="#3E4A59"
             android:layout_marginBottom="12dp" />
-
-
+        <TextView
+            android:id="@+id/textViewBookedUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Booked Users:"
+            android:textSize="18sp"
+            android:textColor="#3E4A59"
+            android:layout_marginBottom="12dp" />
 
     </LinearLayout>
 </ScrollView>

@@ -87,6 +87,15 @@ public class ViewClassActivity extends AppCompatActivity {
                     YogaClass yogaClass = snapshot.getValue(YogaClass.class);
                     if (yogaClass != null) {
                         yogaClass.setFirebaseId(snapshot.getKey()); // Set Firebase ID
+
+                        // Kiểm tra và gán bookedUsers nếu tồn tại
+                        List<String> bookedUsers = new ArrayList<>();
+                        DataSnapshot bookedUsersSnapshot = snapshot.child("BookedUsers");
+                        for (DataSnapshot userSnapshot : bookedUsersSnapshot.getChildren()) {
+                            bookedUsers.add(userSnapshot.getValue(String.class));
+                        }
+                        yogaClass.setBookedUsers(bookedUsers);
+
                         allClasses.add(yogaClass);
                     }
                 }
