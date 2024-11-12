@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F8F3E7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header for Customer Detail -->
+        <TextView
+            android:id="@+id/textViewHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customer Booking Details"
+            android:textSize="22sp"
+            android:textColor="#2C3E50"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="16dp" />
+
+        <!-- Display Customer Booking Details -->
+        <TextView
+            android:id="@+id/textViewCustomerDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#3E4A59"
+            android:padding="16dp"
+            android:background="@drawable/rounded_background"
+            android:layout_marginBottom="24dp"
+            android:text="Booking Information goes here"
+            android:lineSpacingExtra="8sp" />
+
+    </LinearLayout>
+</ScrollView>

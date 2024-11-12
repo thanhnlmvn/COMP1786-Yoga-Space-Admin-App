@@ -9,6 +9,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
+
+        <!-- Các activity của ứng dụng -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -25,6 +27,9 @@
         <activity android:name=".AddClassActivity" android:exported="true"/>
         <activity android:name=".ClassDetailActivity" android:exported="true"/>
         <activity android:name=".EditClassActivity" android:exported="true"/>
+        <activity android:name=".ViewCustomerActivity" android:exported="true"/>
+        <activity android:name=".CustomerDetailActivity" android:exported="true"/>
+
 
 
     </application>

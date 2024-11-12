@@ -2,6 +2,8 @@ package com.example.yogaadminapp;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,7 @@ public class ClassDetailActivity extends AppCompatActivity {
     private DatabaseReference firebaseDatabaseRef;
     private TextView textViewDate, textViewTime, textViewTeacher, textViewDescription, textViewCapacity, textViewDuration, textViewPrice, textViewClassType, textViewBookedUsers;
     private String firebaseId;
+    private ImageButton buttonBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,12 @@ public class ClassDetailActivity extends AppCompatActivity {
         textViewPrice = findViewById(R.id.textViewPrice);
         textViewClassType = findViewById(R.id.textViewClassType);
         textViewBookedUsers = findViewById(R.id.textViewBookedUsers);
+        buttonBack = findViewById(R.id.buttonBack);
+    }
+
+    // Method for handling the back button click
+    public void onBackButtonClicked(View view) {
+        finish(); // Close the activity and go back to the previous screen
     }
 
     private void loadClassDetails(String firebaseId) {

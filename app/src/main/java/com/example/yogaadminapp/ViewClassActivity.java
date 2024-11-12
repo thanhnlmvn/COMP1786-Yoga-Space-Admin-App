@@ -119,6 +119,9 @@ public class ViewClassActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Teacher teacher = snapshot.getValue(Teacher.class);
                     if (teacher != null) {
+                        // Chuyển đổi email từ định dạng test@gmail_com thành test@gmail.com
+                        String correctedEmail = teacher.getEmail().replace("_", ".");
+                        teacher.setEmail(correctedEmail);
                         teacherNames.add(teacher.getName());
                     }
                 }
