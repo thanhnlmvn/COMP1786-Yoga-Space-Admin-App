@@ -29,9 +29,8 @@
         <activity android:name=".EditClassActivity" android:exported="true"/>
         <activity android:name=".ViewCustomerActivity" android:exported="true"/>
         <activity android:name=".CustomerDetailActivity" android:exported="true"/>
-
-
-
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
 
 </manifest>
