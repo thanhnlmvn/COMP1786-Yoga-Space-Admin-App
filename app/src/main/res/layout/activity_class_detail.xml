@@ -12,6 +12,7 @@
         android:background="@drawable/rounded_background"
         android:padding="16dp"
         android:layout_margin="8dp">
+
         <ImageButton
             android:id="@+id/buttonBack"
             android:layout_width="wrap_content"
@@ -21,8 +22,7 @@
             android:contentDescription="Back"
             android:layout_gravity="start"
             android:layout_marginBottom="16dp"
-            android:onClick="onBackPressed"/>
-
+            android:onClick="onBackButtonClicked" />
 
         <ImageView
             android:id="@+id/logoImageView"
@@ -176,6 +176,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="N/A"
+            android:textSize="18sp"
+            android:textColor="#3E4A59"
+            android:layout_marginBottom="12dp" />
+
+        <!--Booked Users  -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Booked Users"
+            android:textColor="#7A7E83"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp" />
+        <TextView
+            android:id="@+id/textViewBookedUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Booked Users:"
             android:textSize="18sp"
             android:textColor="#3E4A59"
             android:layout_marginBottom="12dp" />

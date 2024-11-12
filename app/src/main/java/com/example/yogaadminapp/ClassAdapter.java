@@ -1,7 +1,6 @@
 package com.example.yogaadminapp;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +51,7 @@ public class ClassAdapter extends ArrayAdapter<YogaClass> {
         Button buttonEditClass = convertView.findViewById(R.id.buttonEditClass);
         buttonEditClass.setOnClickListener(v -> {
             Intent intent = new Intent(context, EditClassActivity.class);
-            intent.putExtra("CLASS_ID", yogaClass.getId());
+            intent.putExtra("FIREBASE_ID", yogaClass.getFirebaseId());
             ((ViewClassActivity) context).startActivityForResult(intent, ViewClassActivity.EDIT_CLASS_REQUEST);
         });
 
@@ -60,7 +59,7 @@ public class ClassAdapter extends ArrayAdapter<YogaClass> {
         Button buttonDetail = convertView.findViewById(R.id.buttonDetail);
         buttonDetail.setOnClickListener(v -> {
             Intent intent = new Intent(context, ClassDetailActivity.class);
-            intent.putExtra("CLASS_ID", yogaClass.getId());
+            intent.putExtra("FIREBASE_ID", yogaClass.getFirebaseId()); // Pass firebaseId to ClassDetailActivity
             context.startActivity(intent);
         });
 
@@ -71,7 +70,9 @@ public class ClassAdapter extends ArrayAdapter<YogaClass> {
                     .setTitle("Delete Class")
                     .setMessage("Are you sure you want to delete this class?")
                     .setPositiveButton("Yes", (dialog, which) -> {
-                        databaseHelper.deleteClass(yogaClass.getId());
+                        // Delete class from local database and Firebase
+                        databaseHelper.deleteClass(yogaClass.getFirebaseId());
+                        // Remove from list and update adapter
                         classList.remove(position);
                         notifyDataSetChanged();
                         Toast.makeText(context, "Class deleted successfully.", Toast.LENGTH_SHORT).show();

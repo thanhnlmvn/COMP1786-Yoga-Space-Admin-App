@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button buttonViewClass = findViewById(R.id.buttonViewClass);
         Button buttonViewTeacher = findViewById(R.id.buttonViewTeacher);
+        Button buttonViewCustomer = findViewById(R.id.buttonViewCustomer); // Nút mới cho View Customers
 
         buttonViewClass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,6 +29,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ViewTeacherActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonViewCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ViewCustomerActivity.class); // Mở ViewCustomerActivity
                 startActivity(intent);
             }
         });

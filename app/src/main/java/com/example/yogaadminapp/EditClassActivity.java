@@ -3,7 +3,6 @@ package com.example.yogaadminapp;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -12,6 +11,11 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,8 +28,8 @@ public class EditClassActivity extends AppCompatActivity {
     private EditText editTextDate, editTextTime, editTextCapacity, editTextDuration, editTextPrice, editTextDescription;
     private Spinner spinnerClassType;
     private AutoCompleteTextView autoCompleteTeacherName;
-    private DatabaseHelper databaseHelper;
-    private int classId;
+    private DatabaseReference firebaseDatabaseRef;
+    private String firebaseId;
     private List<String> teacherNames;
 
     @Override
@@ -33,19 +37,22 @@ public class EditClassActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_class);
 
+        // Initialize Firebase reference
+        firebaseDatabaseRef = FirebaseDatabase.getInstance().getReference("classes");
+
         // Initialize views
         initializeViews();
-
-        // Initialize database helper
-        databaseHelper = new DatabaseHelper(this);
 
         // Load teacher names from the database
         loadTeacherNames();
 
-        // Get classId from Intent and load class details
-        classId = getIntent().getIntExtra("CLASS_ID", -1);
-        if (classId != -1) {
-            loadClassDetails(classId);
+        // Get firebaseId from Intent and load class details
+        firebaseId = getIntent().getStringExtra("FIREBASE_ID");
+        if (firebaseId != null && !firebaseId.isEmpty()) {
+            loadClassDetails(firebaseId);
+        } else {
+            Toast.makeText(this, "Error: Firebase ID not found.", Toast.LENGTH_SHORT).show();
+            finish();
         }
 
         // Set up DatePickerDialog
@@ -74,38 +81,59 @@ public class EditClassActivity extends AppCompatActivity {
     }
 
     private void loadTeacherNames() {
-        teacherNames = getTeacherNamesFromDatabase();
-        if (teacherNames == null || teacherNames.isEmpty()) {
-            Toast.makeText(this, "No teachers available. Please add teachers first.", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
+        teacherNames = new ArrayList<>();
+        DatabaseReference teachersRef = FirebaseDatabase.getInstance().getReference("teachers");
+        teachersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Teacher teacher = snapshot.getValue(Teacher.class);
+                    if (teacher != null) {
+                        teacherNames.add(teacher.getName());
+                    }
+                }
+                ArrayAdapter<String> teacherAdapter = new ArrayAdapter<>(EditClassActivity.this, android.R.layout.simple_dropdown_item_1line, teacherNames);
+                autoCompleteTeacherName.setAdapter(teacherAdapter);
+            }
 
-        ArrayAdapter<String> teacherAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, teacherNames);
-        autoCompleteTeacherName.setAdapter(teacherAdapter);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(EditClassActivity.this, "Failed to load teacher names: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void loadClassDetails(int id) {
-        YogaClass yogaClass = databaseHelper.getClassById(id);
-        if (yogaClass != null) {
-            editTextDate.setText(yogaClass.getDate());
-            editTextTime.setText(yogaClass.getTime());
-            editTextCapacity.setText(String.valueOf(yogaClass.getCapacity()));
-            editTextDuration.setText(String.valueOf(yogaClass.getDuration()));
-            editTextPrice.setText(String.valueOf(yogaClass.getPrice()));
-            editTextDescription.setText(yogaClass.getDescription());
-            autoCompleteTeacherName.setText(yogaClass.getTeacherName());
+    private void loadClassDetails(String firebaseId) {
+        firebaseDatabaseRef.child(firebaseId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                YogaClass yogaClass = snapshot.getValue(YogaClass.class);
+                if (yogaClass != null) {
+                    editTextDate.setText(yogaClass.getDate());
+                    editTextTime.setText(yogaClass.getTime());
+                    editTextCapacity.setText(String.valueOf(yogaClass.getCapacity()));
+                    editTextDuration.setText(String.valueOf(yogaClass.getDuration()));
+                    editTextPrice.setText(String.valueOf(yogaClass.getPrice()));
+                    editTextDescription.setText(yogaClass.getDescription());
+                    autoCompleteTeacherName.setText(yogaClass.getTeacherName());
 
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.class_types, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinnerClassType.setAdapter(adapter);
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditClassActivity.this, R.array.class_types, android.R.layout.simple_spinner_item);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerClassType.setAdapter(adapter);
 
-            int spinnerPosition = adapter.getPosition(yogaClass.getClassType());
-            spinnerClassType.setSelection(spinnerPosition);
-        } else {
-            Toast.makeText(this, "Class details not found", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+                    int spinnerPosition = adapter.getPosition(yogaClass.getClassType());
+                    spinnerClassType.setSelection(spinnerPosition);
+                } else {
+                    Toast.makeText(EditClassActivity.this, "Class details not found", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(EditClassActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void updateClass() {
@@ -123,10 +151,14 @@ public class EditClassActivity extends AppCompatActivity {
             int duration = Integer.parseInt(durationStr);
             double price = Double.parseDouble(priceStr);
 
-            databaseHelper.updateClass(classId, date, time, capacity, duration, price, classType, teacherName, description);
-            Toast.makeText(this, "Class updated successfully", Toast.LENGTH_SHORT).show();
-            setResult(RESULT_OK);
-            finish();
+            YogaClass updatedClass = new YogaClass(firebaseId, date, time, capacity, duration, price, classType, teacherName, description);
+            firebaseDatabaseRef.child(firebaseId).setValue(updatedClass)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(EditClassActivity.this, "Class updated successfully", Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK);
+                        finish();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(EditClassActivity.this, "Failed to update class: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -160,15 +192,6 @@ public class EditClassActivity extends AppCompatActivity {
             return false;
         }
         return true;
-    }
-
-    private List<String> getTeacherNamesFromDatabase() {
-        List<Teacher> teacherList = databaseHelper.getAllTeachers();
-        List<String> names = new ArrayList<>();
-        for (Teacher teacher : teacherList) {
-            names.add(teacher.getName());
-        }
-        return names;
     }
 
     private void showDatePickerDialog() {
