@@ -2,6 +2,7 @@ package com.example.yogaadminapp;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,10 @@ public class CustomerDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_detail);
+
+        ImageButton buttonBack = findViewById(R.id.buttonBack);
+        // Set up Back button
+        buttonBack.setOnClickListener(v -> finish());
 
         textViewCustomerDetails = findViewById(R.id.textViewCustomerDetails);
 
@@ -76,4 +81,5 @@ public class CustomerDetailActivity extends AppCompatActivity {
             }
         });
     }
+
 }

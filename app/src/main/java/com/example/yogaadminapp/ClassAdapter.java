@@ -10,6 +10,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
 
 public class ClassAdapter extends ArrayAdapter<YogaClass> {
@@ -59,7 +66,7 @@ public class ClassAdapter extends ArrayAdapter<YogaClass> {
         Button buttonDetail = convertView.findViewById(R.id.buttonDetail);
         buttonDetail.setOnClickListener(v -> {
             Intent intent = new Intent(context, ClassDetailActivity.class);
-            intent.putExtra("FIREBASE_ID", yogaClass.getFirebaseId()); // Pass firebaseId to ClassDetailActivity
+            intent.putExtra("FIREBASE_ID", yogaClass.getFirebaseId());
             context.startActivity(intent);
         });
 
@@ -70,12 +77,53 @@ public class ClassAdapter extends ArrayAdapter<YogaClass> {
                     .setTitle("Delete Class")
                     .setMessage("Are you sure you want to delete this class?")
                     .setPositiveButton("Yes", (dialog, which) -> {
-                        // Delete class from local database and Firebase
-                        databaseHelper.deleteClass(yogaClass.getFirebaseId());
-                        // Remove from list and update adapter
-                        classList.remove(position);
-                        notifyDataSetChanged();
-                        Toast.makeText(context, "Class deleted successfully.", Toast.LENGTH_SHORT).show();
+                        String firebaseId = yogaClass.getFirebaseId();
+
+                        // Xóa lớp học khỏi Firebase
+                        DatabaseReference classRef = FirebaseDatabase.getInstance().getReference("classes").child(firebaseId);
+                        classRef.removeValue().addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // Xóa tất cả các bookings liên quan
+                                DatabaseReference bookingRef = FirebaseDatabase.getInstance().getReference("bookings");
+                                bookingRef.orderByChild("ClassId").equalTo(firebaseId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot bookingSnapshot : dataSnapshot.getChildren()) {
+                                            String bookingId = bookingSnapshot.getKey(); // ID của booking
+                                            String email = bookingSnapshot.child("Email").getValue(String.class); // Lấy email từ booking
+                                            bookingSnapshot.getRef().removeValue(); // Xóa booking khỏi Firebase
+
+                                            // Xóa thông tin lớp học khỏi "customers"
+                                            if (email != null) {
+                                                String sanitizedEmail = email.replace(".", "_"); // Thay đổi email cho đúng định dạng Firebase
+                                                DatabaseReference customerClassRef = FirebaseDatabase.getInstance()
+                                                        .getReference("customers")
+                                                        .child(sanitizedEmail)
+                                                        .child("BookedClasses")
+                                                        .child(firebaseId);
+                                                customerClassRef.removeValue(); // Xóa lớp học khỏi khách hàng
+                                            }
+                                        }
+                                        Toast.makeText(context, "All related bookings and customer data deleted.", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Toast.makeText(context, "Failed to delete bookings: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                                // Xóa lớp khỏi cơ sở dữ liệu cục bộ
+                                databaseHelper.deleteClass(firebaseId);
+
+                                // Xóa lớp khỏi danh sách và cập nhật giao diện
+                                classList.remove(position);
+                                notifyDataSetChanged();
+                                Toast.makeText(context, "Class deleted successfully.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Failed to delete class: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     })
                     .setNegativeButton("No", null)
                     .show();
