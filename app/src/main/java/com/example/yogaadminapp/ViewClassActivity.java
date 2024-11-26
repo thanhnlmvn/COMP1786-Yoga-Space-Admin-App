@@ -79,16 +79,16 @@ public class ViewClassActivity extends AppCompatActivity {
     }
 
     private void loadClassesFromFirebase() {
-        firebaseDatabaseRef.addValueEventListener(new ValueEventListener() {
+        firebaseDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                allClasses.clear();
+                allClasses.clear(); // Clear list to prevent duplicates
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     YogaClass yogaClass = snapshot.getValue(YogaClass.class);
                     if (yogaClass != null) {
                         yogaClass.setFirebaseId(snapshot.getKey()); // Set Firebase ID
 
-                        // Kiểm tra và gán bookedUsers nếu tồn tại
+                        // Check and assign bookedUsers if they exist
                         List<String> bookedUsers = new ArrayList<>();
                         DataSnapshot bookedUsersSnapshot = snapshot.child("BookedUsers");
                         for (DataSnapshot userSnapshot : bookedUsersSnapshot.getChildren()) {
@@ -119,9 +119,6 @@ public class ViewClassActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Teacher teacher = snapshot.getValue(Teacher.class);
                     if (teacher != null) {
-                        // Chuyển đổi email từ định dạng test@gmail_com thành test@gmail.com
-                        String correctedEmail = teacher.getEmail().replace("_", ".");
-                        teacher.setEmail(correctedEmail);
                         teacherNames.add(teacher.getName());
                     }
                 }
@@ -135,12 +132,14 @@ public class ViewClassActivity extends AppCompatActivity {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        filterClassesByTeacherName(s.toString());
+                        // Gọi filterClassesByTeacherName với giá trị hiện tại trong ô tìm kiếm
+                        filterClassesByTeacherName(s.toString().trim());
                     }
 
                     @Override
                     public void afterTextChanged(Editable s) { }
                 });
+
             }
 
             @Override
@@ -185,12 +184,21 @@ public class ViewClassActivity extends AppCompatActivity {
     }
 
     private void filterClassesByTeacherName(String teacherName) {
+        if (teacherName.isEmpty()) {
+            // Nếu không nhập tên giáo viên, hiển thị tất cả các lớp
+            updateListView(allClasses, "No classes available.");
+            return;
+        }
+
+        // Lọc danh sách các lớp dựa trên tên giáo viên
         List<YogaClass> filteredClasses = new ArrayList<>();
         for (YogaClass yogaClass : allClasses) {
             if (yogaClass.getTeacherName().equalsIgnoreCase(teacherName)) {
                 filteredClasses.add(yogaClass);
             }
         }
+
+        // Cập nhật danh sách hiển thị
         updateListView(filteredClasses, "No classes found for the specified teacher.");
     }
 
@@ -206,22 +214,44 @@ public class ViewClassActivity extends AppCompatActivity {
 
     private void showDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            calendar.set(year, month, dayOfMonth);
-            String selectedDate = new SimpleDateFormat("EEEE, dd/MM/yyyy", Locale.getDefault()).format(calendar.getTime());
-            editTextSearchDate.setText(selectedDate);
-            filterClassesByDate(selectedDate);
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (view, year, month, dayOfMonth) -> {
+                    // Xử lý khi chọn ngày
+                    calendar.set(year, month, dayOfMonth);
+                    String selectedDate = new SimpleDateFormat("EEEE, dd/MM/yyyy", Locale.getDefault()).format(calendar.getTime());
+                    editTextSearchDate.setText(selectedDate);
+                    filterClassesByDate(selectedDate);
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+
+        // Xử lý khi người dùng nhấn "Cancel"
+        datePickerDialog.setOnCancelListener(dialog -> {
+            editTextSearchDate.setText(""); // Xóa nội dung trong ô tìm kiếm
+            updateListView(allClasses, "No classes available."); // Hiển thị tất cả các lớp
+        });
+
         datePickerDialog.show();
     }
 
     private void filterClassesByDate(String date) {
+        if (date.isEmpty()) {
+            // Nếu không nhập ngày, hiển thị tất cả các lớp
+            updateListView(allClasses, "No classes available.");
+            return;
+        }
+
+        // Lọc danh sách các lớp dựa trên ngày
         List<YogaClass> filteredClasses = new ArrayList<>();
         for (YogaClass yogaClass : allClasses) {
             if (yogaClass.getDate().equals(date)) {
                 filteredClasses.add(yogaClass);
             }
         }
+
+        // Cập nhật danh sách hiển thị
         updateListView(filteredClasses, "No classes found for the selected date.");
     }
 
@@ -243,7 +273,7 @@ public class ViewClassActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == ADD_CLASS_REQUEST || requestCode == EDIT_CLASS_REQUEST) && resultCode == RESULT_OK) {
-            loadClassesFromFirebase();
+            loadClassesFromFirebase(); // Reload data when a class is added/edited
         }
     }
 }

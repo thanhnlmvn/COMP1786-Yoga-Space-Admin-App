@@ -2,6 +2,8 @@ package com.example.yogaadminapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
@@ -43,10 +45,24 @@ public class ViewCustomerActivity extends AppCompatActivity {
 
         loadCustomerEmails();
 
-        // Set up AutoCompleteTextView for searching emails
-        autoCompleteTextViewSearchEmail.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedEmail = (String) parent.getItemAtPosition(position);
-            displayCustomerByEmail(selectedEmail);
+        // Set up TextWatcher for AutoCompleteTextView to implement real-time search
+        autoCompleteTextViewSearchEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+                // Do nothing here
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                // Call the search function whenever the text changes
+                String query = charSequence.toString().toLowerCase();
+                filterCustomers(query);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Do nothing here
+            }
         });
     }
 
@@ -57,7 +73,7 @@ public class ViewCustomerActivity extends AppCompatActivity {
                 customerEmails.clear();
                 emailToFirebaseKeyMap.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String email = snapshot.getKey().replace("_com", ".com"); // Chuyển đổi email dạng `@gmail_com` thành `@gmail.com`
+                    String email = snapshot.getKey().replace("_com", ".com");
                     customerEmails.add(email);
                     emailToFirebaseKeyMap.put(email, snapshot.getKey());
                 }
@@ -79,11 +95,15 @@ public class ViewCustomerActivity extends AppCompatActivity {
         });
     }
 
-    private void displayCustomerByEmail(String email) {
+    private void filterCustomers(String query) {
         List<String> filteredEmails = new ArrayList<>();
-        if (emailToFirebaseKeyMap.containsKey(email)) {
-            filteredEmails.add(email);
+        for (String email : customerEmails) {
+            if (email.toLowerCase().contains(query)) {
+                filteredEmails.add(email);
+            }
         }
+
+        // Update the ListView with the filtered emails
         CustomerAdapter adapter = new CustomerAdapter(filteredEmails);
         listViewCustomers.setAdapter(adapter);
     }

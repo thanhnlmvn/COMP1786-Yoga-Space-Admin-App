@@ -31,6 +31,15 @@
             android:contentDescription="Logo"
             android:layout_marginBottom="24dp"
             android:layout_gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add a new teacher"
+            android:textColor="#3E4A59"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="8dp" />
 
         <!-- Tên Giáo viên -->
         <TextView
